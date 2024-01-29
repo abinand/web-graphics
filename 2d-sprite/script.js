@@ -8,11 +8,12 @@ const playerImage = new Image();
 playerImage.src = "./shadow_dog.png";
 const spriteWidth = 575;
 const spriteHeight = 523;
-const staggerFrames = 5;
 
+const staggerFrames = 4;
+let gameFrame = 0;
 
+/* ***** Iteration 1 *********/
 /*
-* ***** Iteration 1 *********
 function animate() {
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
@@ -26,30 +27,10 @@ function animate() {
 animate();
 */
 
-/*
- ***** Iteration 2 *********
+/********  Iteration 2 ********/
+/* 
 let frameX = 0;
 let frameY = 0;
-let gameFrame = 0;
-function animate() {
-    ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-    ctx.drawImage(playerImage, frameX * spriteWidth, frameY * spriteHeight, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
-
-    if(gameFrame % staggerFrames === 0) 
-    {
-        frameX = (frameX + 1) % 6; // cycle the number of sprites in first row
-    }
-    gameFrame++;
-    requestAnimationFrame(animate);
-}
-animate();
-*/
-
-/*
- ****** Iteration 3 ******/
-let frameX = 0;
-let frameY = 0;
-let gameFrame = 0;
 function animate() {
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
@@ -61,4 +42,79 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+animate();
+*/
+
+const animationStates = [
+    {
+        name: "idle",
+        frames: 7
+    },
+    {
+        name: "jump",
+        frames: 7
+    },
+    {
+        name: "fall",
+        frames: 7
+    },
+    {
+        name: "run",
+        frames: 9
+    },
+    {
+        name: "dizzy",
+        frames: 11
+    },
+    {
+        name: "sit",
+        frames: 5
+    },
+    {
+        name: "roll",
+        frames: 7
+    },
+    {
+        name: "bite",
+        frames: 7
+    },
+    {
+        name: "ko",
+        frames: 12
+    },
+    {
+        name: "getHit",
+        frames: 4
+    }
+
+];
+const spriteAnimations = [];
+animationStates.forEach((state, index) => {
+    let frameLocations = {
+        loc: []
+    }
+    for(let j=0; j<state.frames; j++) {
+        let positionX = j * spriteWidth;
+        let positionY = index * spriteHeight;
+        frameLocations.loc.push({x: positionX, y: positionY});
+    }
+
+    spriteAnimations[state.name] = frameLocations;
+});
+
+let playerState = "idle";
+document.getElementById("animations").addEventListener("change", (e) => {
+    playerState = e.target.value;
+})
+
+function animate() {
+    ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    let position = Math.floor(gameFrame/staggerFrames) % spriteAnimations[playerState].loc.length;
+    let frameX = spriteAnimations[playerState].loc[position].x;
+    let frameY = spriteAnimations[playerState].loc[position].y;
+    ctx.drawImage(playerImage, frameX, frameY, spriteWidth, spriteHeight, 0, 0, spriteWidth, spriteHeight);
+    gameFrame = (gameFrame + 1) % 1000000;
+
+    requestAnimationFrame(animate);
+}
 animate();
