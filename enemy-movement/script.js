@@ -63,14 +63,22 @@ class Enemy {
         this.x = Utility.RandomBetween(0, CANVAS_WIDTH  - this.width);
         this.y = Utility.RandomBetween(0, CANVAS_HEIGHT - this.height);
         this.speed = Utility.RandomBetween(1,3);
+
         this.waveAngle = Math.random() * 2;
+
+        this.curveSpeed = Math.random() + 1;
+        
         this.curveAngle = 0;
+        this.curveOffset = Math.random() * 200;
+       
         this.middleX = (CANVAS_WIDTH - this.width)/2;
         this.middleY = (CANVAS_HEIGHT - this.height)/2;
-        this.curveOffset = Math.random() * 200;
-        this.curveSpeed = Math.random() + 1;
+
+        this.newX = Utility.RandomBetween(0, CANVAS_WIDTH - this.width);
+        this.newY = Utility.RandomBetween(0, CANVAS_HEIGHT - this.height);
         this.animFrame = 1;
         this.animSpeed = Utility.RandomBetween(2,4);
+        this.refreshInterval = Utility.RandomBetween(50, 200);
     }
 
     update() {
@@ -96,6 +104,16 @@ class Enemy {
                 this.x = this.middleX * Math.sin(this.curveAngle * Math.PI/90) + this.middleX;
                 this.y = this.middleY * Math.cos(this.curveAngle * Math.PI/270) + this.middleY;
                 this.curveAngle += this.curveSpeed;
+                break;
+            case 'patrol':
+                if(gameFrame % this.refreshInterval === 0) {
+                   this.newX = Utility.RandomBetween(0, CANVAS_WIDTH - this.width);
+                   this.newY = Utility.RandomBetween(0, CANVAS_HEIGHT - this.height);
+                }
+                let dx = this.newX - this.x;
+                let dy = this.newY - this.y;
+                this.x += dx/70;
+                this.y += dy/70;
                 break;
         }
         if (gameFrame % this.animSpeed === 0) {
