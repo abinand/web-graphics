@@ -14,3 +14,10 @@ The vertex, index and color buffers are initialized and loaded to basic vertex a
 
 ![webgl-basic screenshot](./webgl-basic/screenshot.png)
 
+### webgl-texture
+
+An extension of the webgl-basic applying an image (texture map) over every face of the cube.
+
+It also uses a basic normal map buffer for each face of the cube which is used by the vertex shader to apply a directional lighting to the cube.
+
+![webgl-texture screenshot](./webgl-texture/screenshot.png)
